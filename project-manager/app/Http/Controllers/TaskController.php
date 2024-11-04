@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Task;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -50,10 +52,19 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+
+     public function updateStatus(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
+    $request->validate([
+        'status' => 'required|string|in:Not Started,In Progress,Completed'
+    ]);
+
+    $task->status = $request->status;
+    $task->save();
+
+    return redirect()->back()->with('success', 'Status tugas berhasil diperbarui!');
+}
 
     /**
      * Remove the specified resource from storage.

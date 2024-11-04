@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Project Management</a>
+        <a class="navbar-brand" href="../projects">Project Management</a>
     </nav>
     <div class="container mt-4">
         @yield('content')
