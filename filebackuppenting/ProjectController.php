@@ -114,43 +114,30 @@ class ProjectController extends Controller
 
     // Update project
     $project = Project::findOrFail($id);
-    $project->update($validatedData);
+    $project->update([
+        'name' => $validatedData['name'],
+        'description' => $validatedData['description'],
+        'start_date' => $validatedData['start_date'],
+        'end_date' => $validatedData['end_date'],
+        'status' => $validatedData['status'],
+    ]);
 
-    // Get task inputs
+    // Update each task associated with the project
     $taskIds = $request->input('task_id', []);
     $taskNames = $request->input('task_name', []);
     $assignedTo = $request->input('assigned_to', []);
     $taskStatuses = $request->input('task_status', []);
     $dueDates = $request->input('due_date', []);
 
-    // Get IDs of existing tasks in the database for this project
-    $existingTaskIds = $project->tasks()->pluck('id')->toArray();
-
-    // Loop over each task in the form data
-    foreach ($taskNames as $index => $taskName) {
-        if (!empty($taskIds[$index]) && in_array($taskIds[$index], $existingTaskIds)) {
-            // Update existing task
-            $task = Task::findOrFail($taskIds[$index]);
-            $task->update([
-                'task_name' => $taskName,
-                'assigned_to' => $assignedTo[$index],
-                'status' => $taskStatuses[$index],
-                'due_date' => $dueDates[$index],
-            ]);
-        } else {
-            // Create new task if task ID is empty
-            $project->tasks()->create([
-                'task_name' => $taskName,
-                'assigned_to' => $assignedTo[$index],
-                'status' => $taskStatuses[$index],
-                'due_date' => $dueDates[$index],
-            ]);
-        }
+    foreach ($taskIds as $index => $taskId) {
+        $task = Task::findOrFail($taskId);
+        $task->update([
+            'task_name' => $taskNames[$index],
+            'assigned_to' => $assignedTo[$index],
+            'status' => $taskStatuses[$index],
+            'due_date' => $dueDates[$index],
+        ]);
     }
-
-    // Delete tasks that were not in the submitted task IDs
-    $tasksToDelete = array_diff($existingTaskIds, $taskIds);
-    Task::whereIn('id', $tasksToDelete)->delete();
 
     return redirect()->route('projects.index')->with('success', 'Proyek dan tugas berhasil diperbarui!');
 }

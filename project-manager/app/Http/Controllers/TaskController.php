@@ -57,7 +57,7 @@ class TaskController extends Controller
 {
     $task = Task::findOrFail($id);
     $request->validate([
-        'status' => 'required|string|in:Not Started,In Progress,Completed'
+        'status' => 'required|string|in:Pending,Completed'
     ]);
 
     $task->status = $request->status;

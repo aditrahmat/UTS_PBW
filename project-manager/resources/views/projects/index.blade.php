@@ -36,34 +36,38 @@
                 <tr>
                     <td colspan="6">
                         <!-- Bootstrap Accordion for Tasks -->
-                        <div class="accordion" id="accordion-{{ $project->id }}">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading-{{ $project->id }}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $project->id }}" aria-expanded="false" aria-controls="collapse-{{ $project->id }}">
-                                        Tugas dalam Proyek: {{ $project->name }}
-                                    </button>
-                                </h2>
-                                <div id="collapse-{{ $project->id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $project->id }}" data-bs-parent="#accordion-{{ $project->id }}">
-                                    <div class="accordion-body">
-                                    @foreach ($project->tasks as $task)
-                                    <div class="d-flex justify-content-between">
-                                        <p>{{ $task->task_name }} - {{ $task->status }}</p>
-                                            <form action="{{ route('tasks.updateStatus', $task->id) }}" method="POST" onsubmit="return confirm('Yakin ingin mengubah status task ini?')">
-                                                @csrf
-                                                @method('PUT')
-                                                <select name="status" class="form-select form-select-sm d-inline w-auto">
-                                                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                                </select>
-                                                <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
-                                            </form>
-                                        </div>
-                                    @endforeach
-                                    </div>
-                                </div>
-                            </div>
+<div class="accordion" id="accordion-{{ $project->id }}">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-{{ $project->id }}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $project->id }}" aria-expanded="false" aria-controls="collapse-{{ $project->id }}">
+                Tugas dalam Proyek: {{ $project->name }}
+            </button>
+        </h2>
+        <div id="collapse-{{ $project->id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $project->id }}" data-bs-parent="#accordion-{{ $project->id }}">
+            <div class="accordion-body">
+                @foreach ($project->tasks as $task)
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <strong>{{ $task->task_name }}</strong> - <span class="badge bg-{{ $task->status == 'Completed' ? 'success' : 'secondary' }}">{{ $task->status }}</span>
                         </div>
-                        <!-- End of Accordion -->
+                        <form action="{{ route('tasks.updateStatus', $task->id) }}" method="POST" onsubmit="return confirm('Yakin ingin mengubah status task ini?')">
+                            @csrf
+                            @method('PUT')
+                            <div class="d-flex align-items-center">
+                                <select name="status" class="form-select form-select-sm w-auto me-2">
+                                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Accordion -->
                     </td>
                 </tr>
             @endforeach

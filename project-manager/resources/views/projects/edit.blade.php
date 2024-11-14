@@ -37,39 +37,53 @@
         </div>
 <!-- Task fields-->
 <h4 class="mt-4">Tasks</h4>
-@foreach($projects->tasks as $index => $task)
-    <div class="card mb-3">
-        <div class="card-body">
-            <!-- Hidden input for task ID -->
-            <input type="hidden" name="task_id[]" value="{{ $task->id }}">
-            
-            <div class="form-group">
-                <label for="task_name_{{ $index }}">Nama Task:</label>
-                <input type="text" class="form-control" id="task_name_{{ $index }}" name="task_name[]" value="{{ $task->task_name }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="assigned_to_{{ $index }}">Diberikan kepada:</label>
-                <input type="text" class="form-control" id="assigned_to_{{ $index }}" name="assigned_to[]" value="{{ $task->assigned_to }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="task_status_{{ $index }}">Status Task:</label>
-                <select class="form-control" id="task_status_{{ $index }}" name="task_status[]">
-                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="due_date_{{ $index }}">Tanggal Deadline:</label>
-                <input type="date" class="form-control" id="due_date_{{ $index }}" name="due_date[]" value="{{ $task->due_date }}">
-            </div>
+<div id="task-container">
+            @foreach($projects->tasks as $index => $task)
+                @include('tasks.partials.task', ['task' => $task, 'index' => $index])
+            @endforeach
         </div>
-    </div>
-@endforeach
-
+<!-- Buttons -->
+<button type="button" class="btn btn-secondary" onclick="addTask()">Tambah Task</button>
 <button type="submit" class="btn btn-primary">Perbarui</button>
+<!-- Buttons -->
+ 
+<!-- Script tambah task-->
+<script>
+    let taskCount = {{ count($projects->tasks) }};
+    function addTask() {
+        let taskTemplate = `
+            <div class="card mb-3">
+                <div class="card-body">
+                    <input type="hidden" name="task_id[]" value="">
+                    <div class="form-group">
+                        <label for="task_name_${taskCount}">Nama Task:</label>
+                        <input type="text" class="form-control" id="task_name_${taskCount}" name="task_name[]" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assigned_to_${taskCount}">Diberikan kepada:</label>
+                        <input type="text" class="form-control" id="assigned_to_${taskCount}" name="assigned_to[]" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task_status_${taskCount}">Status Task:</label>
+                        <select class="form-control" id="task_status_${taskCount}" name="task_status[]">
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="due_date_${taskCount}">Tanggal Deadline:</label>
+                        <input type="date" class="form-control" id="due_date_${taskCount}" name="due_date[]">
+                    </div>
+                </div>
+            </div>`;
+        document.getElementById('task-container').insertAdjacentHTML('beforeend', taskTemplate);
+        taskCount++;
+    }
+</script>
+<!--END OF Script tambah task-->
 
     </form>
 </div>
