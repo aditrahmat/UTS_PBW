@@ -102,20 +102,45 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|string|in:Not Started,In Progress,Completed'
+    public function update(Request $request, $id)
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after_or_equal:start_date',
+        'status' => 'required|string|in:Not Started,In Progress,Completed',
+    ]);
+
+    // Update project
+    $project = Project::findOrFail($id);
+    $project->update([
+        'name' => $validatedData['name'],
+        'description' => $validatedData['description'],
+        'start_date' => $validatedData['start_date'],
+        'end_date' => $validatedData['end_date'],
+        'status' => $validatedData['status'],
+    ]);
+
+    // Update each task associated with the project
+    $taskIds = $request->input('task_id', []);
+    $taskNames = $request->input('task_name', []);
+    $assignedTo = $request->input('assigned_to', []);
+    $taskStatuses = $request->input('task_status', []);
+    $dueDates = $request->input('due_date', []);
+
+    foreach ($taskIds as $index => $taskId) {
+        $task = Task::findOrFail($taskId);
+        $task->update([
+            'task_name' => $taskNames[$index],
+            'assigned_to' => $assignedTo[$index],
+            'status' => $taskStatuses[$index],
+            'due_date' => $dueDates[$index],
         ]);
-        $projects = Project::findOrFail($id);
-        $projects->update($request->all());
-        return redirect()->route('projects.index')->with('success', 'project berhasil diupdate.');
     }
 
+    return redirect()->route('projects.index')->with('success', 'Proyek dan tugas berhasil diperbarui!');
+}
     /**
      * Remove the specified resource from storage.
      */
