@@ -14,7 +14,28 @@ class ProjectController extends Controller
      */
     public function index()
 {
-    $projects = Project::with('tasks')->get(); // Pastikan ini mengembalikan koleksi data
+    $projects = Project::with('tasks')->get();
+
+    foreach ($projects as $project) {
+        // Hitung jumlah task yang selesai dan total task
+        $completedTasks = $project->tasks->where('status', 'Completed')->count();
+        $totalTasks = $project->tasks->count();
+
+        // Hitung progress sebagai persentase dan update kolom progress
+        $project->progress = $totalTasks > 0 ? intval(($completedTasks / $totalTasks) * 100) : 0;
+
+        // Update status project berdasarkan progress
+        if ($project->progress == 100) {
+            $project->status = 'Completed';
+        } elseif ($project->progress > 0) {
+            $project->status = 'In Progress';
+        } else {$project->progress == 0;
+            $project->status = 'Not Started';
+        }
+
+        $project->save();
+    }
+
     return view('projects.index', compact('projects'));
 }
 
