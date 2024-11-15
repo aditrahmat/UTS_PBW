@@ -21,7 +21,7 @@
             <tr>
                 <td>
                     <!-- Tombol untuk Menampilkan Tugas dalam Proyek -->
-                    <button class="btn btn-link text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#tasks-{{ $project->id }}" aria-expanded="false" aria-controls="tasks-{{ $project->id }}">
+                    <button class="btn btn-link link-underline link-underline-opacity-0 link-underline-opacity-100-hover" type="button" data-bs-toggle="collapse" data-bs-target="#tasks-{{ $project->id }}" aria-expanded="false" aria-controls="tasks-{{ $project->id }}">
                         {{ $project->name }}
                     </button>
                 </td>
@@ -67,12 +67,12 @@
                     <!-- List Group untuk Tasks -->
                     <div class="list-group">
                         <div class="list-group-item list-group-item-action active">
-                            Tugas dalam Proyek: {{ $project->name }}
+                            <h5><strong>Tugas dalam project: {{ $project->name }}</h5></strong>
                         </div>
                         @forelse ($project->tasks as $task)
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>{{ $task->task_name }}</strong> - <span class="badge bg-{{ $task->status == 'Completed' ? 'success' : 'secondary' }}">{{ $task->status }}</span>
+                                    {{ $task->task_name }} - <span class="badge bg-{{ $task->status == 'Completed' ? 'success' : 'secondary' }}">{{ $task->status }}</span>
                                 </div>
                                 <form action="{{ route('tasks.updateStatus', $task->id) }}" method="POST" onsubmit="return confirm('Yakin ingin mengubah status task ini?')">
                                     @csrf
