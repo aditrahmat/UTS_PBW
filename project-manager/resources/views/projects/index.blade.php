@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container">
-    <h2>Daftar Proyek</h2>
-    <a href="{{ route('projects.create') }}" class="btn btn-success">Tambah Proyek</a>
+    <h2>Daftar Project</h2>
+    <a href="{{ route('projects.create') }}" class="btn btn-success">Add a new project</a>
 
     <table class="table table-bordered mt-3">
         <thead>
@@ -67,7 +67,7 @@
                     <!-- List Group untuk Tasks -->
                     <div class="list-group">
                         <div class="list-group-item list-group-item-action active">
-                            <h5><strong>Tugas dalam project: {{ $project->name }}</h5></strong>
+                            <h5><strong>{{ $project->name }} task list</h5></strong>
                         </div>
                         @forelse ($project->tasks as $task)
                             <div class="list-group-item d-flex justify-content-between align-items-center">

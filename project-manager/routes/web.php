@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\DashboardController;
 
 Route::resource('projects', ProjectController::class);
 Route::resource('tasks', TaskController::class);
@@ -47,5 +48,8 @@ Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])->name('pro
 // Route untuk Taskcontroller
 Route::put('/tasks/{task}/update-status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
 Route::put('/tasks/{task}', [ProjectController::class, 'update'])->name('tasks.update');
+
+// Route DashboardController
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 require __DIR__.'/auth.php';
