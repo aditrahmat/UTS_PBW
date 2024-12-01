@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/login'; // Arahkan ke halaman login setelah register
+    public const HOME = '/email/verify'; // arahkan ke verify setelah register
 
     /**
      * Register any application services.
