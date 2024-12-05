@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'level',
     ];
 
     /**
@@ -45,5 +46,29 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    // Daftar level pengguna
+    public const LEVELS = [
+        'Administrator',
+        'Project Director',
+        'Project Manager',
+        'Team Leader',
+        'User',
+    ];
+
+    // Helper untuk cek level
+    public function isLevel(string $level): bool
+    {
+        return $this->level === $level;
+    }
+
+    public function isAbove(string $level): bool
+    {
+        return array_search($this->level, self::LEVELS) < array_search($level, self::LEVELS);
+    }
+
+    public function isBelow(string $level): bool
+    {
+        return array_search($this->level, self::LEVELS) > array_search($level, self::LEVELS);
     }
 }

@@ -44,7 +44,7 @@
                             @elseif ($project->progress < 75) bg-warning progress-bar-striped
                             @else bg-success
                             @endif"
-                            role="progressbar"
+                            level="progressbar"
                             style="width: {{ $project->progress }}%;"
                             aria-valuenow="{{ $project->progress }}"
                             aria-valuemin="0"

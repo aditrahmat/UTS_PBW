@@ -8,6 +8,9 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 // Step 1 : Register -> Verify
 Route::get('/email/verify', function () {
@@ -23,12 +26,34 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+// ==================================================================================================
 
-// ============================================================== //
+// Step 2 user login action
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+// ==================================================================================================
 
+// ==================================================================================================
+// =============== Route Level ====================== //
+
+// Routes users as Administrator
+Route::middleware(['auth', 'level:Administrator'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index');
+    // Edit pengguna
+    Route::resource('users', AdminUserController::class);
+    Route::get('/admin/users/{id}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
+
+    // Hapus pengguna
+    Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+});
+// endof user as Administrator
+
+
+// =============== Endof Route Level ====================== //
 Route::resource('projects', ProjectController::class);
 Route::resource('tasks', TaskController::class);
 

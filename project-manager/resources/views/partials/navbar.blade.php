@@ -15,6 +15,12 @@
                 <li class="nav-item">
                     <a class="nav-link @if(request()->routeIs('projects.index')) active @endif" href="{{ route('projects.index') }}">Project</a>
                 </li>
+                <!-- Tambahkan Link ke Users jika pengguna adalah admin -->
+                @if(auth()->user()->level == 'Administrator')
+                    <li class="nav-item">
+                        <a class="nav-link @if(request()->routeIs('admin.users.index')) active @endif" href="{{ route('admin.users.index') }}">Users</a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
